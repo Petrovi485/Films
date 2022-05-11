@@ -30,6 +30,8 @@ class Details : AppCompatActivity() {
             finish()
         }
 
+
+
     }
 
 

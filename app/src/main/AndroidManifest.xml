@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Films_Otus">
         <activity
+            android:name=".Favorite"
+            android:exported="false" />
+        <activity
             android:name=".Details3"
             android:exported="false" />
         <activity
