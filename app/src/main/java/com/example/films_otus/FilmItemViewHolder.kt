@@ -26,22 +26,13 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
            btFavor.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
         }
 
-
-
-
-
-
         btFavor.setOnClickListener{
             listener.onFavoriteClick(item, adapterPosition)
 
         }
 
-
-
-
         bd1.setOnClickListener{
             listener.onDetailsClick(item, adapterPosition)
-
 
         }
     }

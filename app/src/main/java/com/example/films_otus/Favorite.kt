@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.example.films_otus.databinding.ActivityFavoriteBinding
 import com.example.films_otus.databinding.ActivityMainBinding
 
+
 class Favorite : AppCompatActivity() {
 
     lateinit var binding: ActivityFavoriteBinding
@@ -32,21 +33,24 @@ class Favorite : AppCompatActivity() {
 
                 override fun onFavoriteClick(item: FilmItem, position: Int) {
 
-                   // FilmData.item[position].isFavorite = !FilmData.item[position].isFavorite
 
-                   // binding.recyclerFavor.adapter?.notifyItemChanged(position)
 
-                   // if (!FilmData.item[position].isFavorite) {
-                   //         FilmData.item.removeAt(position)
+                    FilmData.item[position].isFavorite = !FilmData.item[position].isFavorite
 
-                   //       }
-                  //  binding.recyclerFavor.adapter?.notifyItemRemoved(position)
+
+
+                    binding.recyclerFavor.adapter?.notifyItemChanged(position)
 
 
 
 
 
 
+
+
+
+
+                      //    }
 
                 }
 

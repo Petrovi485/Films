@@ -31,15 +31,7 @@ class FilmItemAdapter(
 
     override fun onBindViewHolder(holder: FilmItemViewHolder, position: Int) {
         holder.bind(filmList[position], listener)
-       // holder.itemView.findViewById<ImageButton>(R.id.btFavor).setOnClickListener {
-          //  item[position].isFavorite = !item[position].isFavorite
 
-          //  if (!item[position].isFavorite) {
-           //     item.removeAt(position)
-          //  notifyItemRemoved(position)
-           //  }
-
-       // }
     }
 
 }
