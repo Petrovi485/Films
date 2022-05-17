@@ -19,12 +19,14 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
         imageIm.setImageResource(item.image)
         tvName.text = item.name
 
-       // if (item.isFavorite) {
-        //    btFavor.setBackgroundColor(R.color.teal_700)
+       if (item.isFavorite) {
+            btFavor.setBackgroundResource(R.drawable.ic_baseline_favorite_24)
 
-       // } else {
-        //    btFavor.setBackgroundColor(R.color.white)
-       // }
+        } else {
+           btFavor.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
+        }
+
+
 
 
 
@@ -46,4 +48,6 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
 
 
 }
+
+
 

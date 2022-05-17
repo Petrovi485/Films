@@ -4,10 +4,11 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.films_otus.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private fun initRecycler() {
 
         binding.recycler.adapter = FilmItemAdapter(
-            FilmData.item as ArrayList<FilmItem>,
+            FilmData.item as MutableList<FilmItem>,
             object : FilmItemAdapter.NewClickListener{
                 override fun onDetailsClick(item: FilmItem, position: Int) {
 
@@ -39,11 +40,19 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFavoriteClick(item: FilmItem, position: Int) {
 
+                    FilmData.item[position].isFavorite = !FilmData.item[position].isFavorite
+
                     binding.recycler.adapter?.notifyItemChanged(position)
 
                 }
             }
         )
+
+        val divider = DividerItemDecoration(this, DividerItemDecoration
+            .VERTICAL)
+        ResourcesCompat.getDrawable(resources, R.drawable.divider, theme)?.let { divider.setDrawable(it) }
+        binding.recycler.addItemDecoration(divider)
+
     }
 
     fun Click (view: View) {

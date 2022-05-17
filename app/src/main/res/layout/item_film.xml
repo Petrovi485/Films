@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +68,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="156dp"
                 android:layout_marginBottom="90dp"
-                android:background="@drawable/ic_baseline_favorite_24"
+                android:background="@drawable/ic_baseline_favorite_border_24"
 
                 />
 

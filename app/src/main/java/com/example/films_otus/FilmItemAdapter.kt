@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.films_otus.FilmData.item
 
 class FilmItemAdapter(
-    private val filmList: MutableList<FilmItem>,
+    private val filmList: List<FilmItem>,
     private val listener: NewClickListener
 
 ): RecyclerView.Adapter<FilmItemViewHolder>() {
@@ -31,15 +31,15 @@ class FilmItemAdapter(
 
     override fun onBindViewHolder(holder: FilmItemViewHolder, position: Int) {
         holder.bind(filmList[position], listener)
-        holder.itemView.findViewById<ImageButton>(R.id.btFavor).setOnClickListener {
-            item[position].isFavorite = !item[position].isFavorite
+       // holder.itemView.findViewById<ImageButton>(R.id.btFavor).setOnClickListener {
+          //  item[position].isFavorite = !item[position].isFavorite
 
-            if (!item[position].isFavorite) {
-                item.removeAt(position)
-            notifyItemRemoved(position)
-             }
+          //  if (!item[position].isFavorite) {
+           //     item.removeAt(position)
+          //  notifyItemRemoved(position)
+           //  }
 
-        }
+       // }
     }
 
 }

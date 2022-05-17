@@ -24,7 +24,7 @@ class Favorite : AppCompatActivity() {
 
 
         binding.recyclerFavor.adapter = FilmItemAdapter(
-            FilmData.item.filter { it.isFavorite }.toMutableList(),
+            FilmData.item.filter { it.isFavorite } as MutableList<FilmItem>,
             object : FilmItemAdapter.NewClickListener{
                 override fun onDetailsClick(item: FilmItem, position: Int) {
 
@@ -32,7 +32,21 @@ class Favorite : AppCompatActivity() {
 
                 override fun onFavoriteClick(item: FilmItem, position: Int) {
 
-                    binding.recyclerFavor.adapter?.notifyItemRemoved(position)
+                   // FilmData.item[position].isFavorite = !FilmData.item[position].isFavorite
+
+                   // binding.recyclerFavor.adapter?.notifyItemChanged(position)
+
+                   // if (!FilmData.item[position].isFavorite) {
+                   //         FilmData.item.removeAt(position)
+
+                   //       }
+                  //  binding.recyclerFavor.adapter?.notifyItemRemoved(position)
+
+
+
+
+
+
 
                 }
 
