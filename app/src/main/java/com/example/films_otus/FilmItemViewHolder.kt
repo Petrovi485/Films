@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
     private val imageIm: ImageView = itemView.findViewById(R.id.ivImage)
      private var tvName: TextView = itemView.findViewById(R.id.tvName)
-    private val btFavor: ImageButton = itemView.findViewById(R.id.btFavor)
+    private val btFavorite: ImageButton = itemView.findViewById(R.id.btFavor)
     private val bd1: Button = itemView.findViewById(R.id.bd1)
 
 
@@ -19,14 +19,16 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
         imageIm.setImageResource(item.image)
         tvName.text = item.name
 
+
+
        if (item.isFavorite) {
-            btFavor.setBackgroundResource(R.drawable.ic_baseline_favorite_24)
+            btFavorite.setBackgroundResource(R.drawable.ic_baseline_favorite_24)
 
         } else {
-           btFavor.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
+           btFavorite.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
         }
 
-        btFavor.setOnClickListener{
+        btFavorite.setOnClickListener{
             listener.onFavoriteClick(item, adapterPosition)
 
         }

@@ -3,13 +3,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.films_otus.FilmData.item
+
 
 class FilmItemAdapter(
-    private val filmList: List<FilmItem>,
+    private val filmList: MutableList<FilmItem>,
     private val listener: NewClickListener
 
 ): RecyclerView.Adapter<FilmItemViewHolder>() {
+
+    fun deleteFavoriteItem(position: Int) {
+        filmList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_film, parent, false)
