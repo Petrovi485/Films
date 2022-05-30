@@ -1,4 +1,4 @@
-package com.example.films_otus
+package com.example.films_otus.screens.details
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

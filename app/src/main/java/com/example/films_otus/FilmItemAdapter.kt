@@ -3,6 +3,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
+import com.example.films_otus.screens.main.ListFragment
 
 
 class FilmItemAdapter(
@@ -27,6 +28,8 @@ class FilmItemAdapter(
         return filmList.size
 
     }
+
+
 
     interface NewClickListener {
 

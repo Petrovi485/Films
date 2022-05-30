@@ -1,7 +1,10 @@
-package com.example.films_otus
+package com.example.films_otus.screens.favorite
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.films_otus.FilmData
+import com.example.films_otus.FilmItem
+import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.databinding.ActivityFavoriteBinding
 
 
