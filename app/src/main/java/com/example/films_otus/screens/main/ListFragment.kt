@@ -18,6 +18,15 @@ class ListFragment: Fragment() {
 
     lateinit var binding: FragmentListBinding
 
+    lateinit var films: MutableList<FilmItem>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+
+
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,22 +55,15 @@ private fun initRecycler() {
    filmItemAdapter = FilmItemAdapter(filmlist, newClickListener)
    binding.recycler.adapter = filmItemAdapter
 
-
-
-
 }
 
 private val newClickListener = object : FilmItemAdapter.NewClickListener {
    override fun onDetailsClick(item: FilmItem, position: Int) {
 
-
-
        parentFragmentManager.beginTransaction()
-           .replace(R.id.frame_main, DetailsFragment())
+           .replace(R.id.frame_main, DetailsFragment.newInstance(item))
            .addToBackStack(null)
            .commit()
-
-
    }
 
    override fun onFavoriteClick(item: FilmItem, position: Int) {
@@ -70,8 +72,6 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
 
    }
 }
-
-
 
     companion object{
         fun clickMovie(filmItem: FilmItem){
