@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.films_otus.FilmData
 import com.example.films_otus.FilmItem
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentDetailsBinding
+import com.google.android.material.snackbar.Snackbar
+
 class DetailsFragment: Fragment() {
 
     lateinit var binding: FragmentDetailsBinding
@@ -43,22 +46,30 @@ class DetailsFragment: Fragment() {
             binding.toolbar.title = currentMovie.name
             binding.ivDetail.setImageResource(currentMovie.image)
             binding.tvTitle.setText(currentMovie.title)
-
-        if (currentMovie.isFavorite) {
-           binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_24)}
-        else {binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_border_24)}
+            setImageRes()
 
         binding.btFavorDetails.setOnClickListener {
 
             val bool = currentMovie.isFavorite
             currentMovie.isFavorite = !bool
-
-            if (currentMovie.isFavorite) {
-                binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_24)}
-            else {binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_border_24)}
-
+            setImageRes()
             callBackDetails?.onFavoriteToggled(currentMovie)
 
+            view.let {
+                Snackbar.make(it,
+                    if (currentMovie.isFavorite) "Фильм ${currentMovie.name} добавлен в избранное"
+                    else "Фильм ${currentMovie.name} удален из избранного", Snackbar.LENGTH_LONG)
+
+
+                    .setAction("Отмена") {
+                        currentMovie.isFavorite = !currentMovie.isFavorite
+
+                        setImageRes()
+
+                    }
+                    .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+                    .show()
+            }
 
 
         }
@@ -78,6 +89,14 @@ class DetailsFragment: Fragment() {
             return fragment
 
         }
+
+    }
+
+    private fun setImageRes(){
+
+        if (currentMovie.isFavorite) {
+            binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_24)}
+        else {binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_border_24)}
 
     }
 

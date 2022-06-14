@@ -49,8 +49,9 @@ class FavoriteFragment: Fragment() {
 
     private val newClickListener = object : FilmItemAdapter.NewClickListener {
         override fun onDetailsClick(item: FilmItem, position: Int) {
+
             parentFragmentManager.beginTransaction()
-                .replace(R.id.frame_main, DetailsFragment())
+                .replace(R.id.frame_main, DetailsFragment.newInstance(item))
                 .addToBackStack(null)
                 .commit()
 

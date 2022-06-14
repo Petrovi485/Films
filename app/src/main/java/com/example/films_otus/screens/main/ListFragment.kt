@@ -89,13 +89,13 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
    }
 }
 
-    companion object{
-        fun clickMovie(filmItem: FilmItem){
-            val bundle = Bundle()
-            bundle.putSerializable("film", filmItem)
+  //  companion object{
+     //   fun clickMovie(filmItem: FilmItem){
+     //       val bundle = Bundle()
+      //      bundle.putSerializable("film", filmItem)
 
-        }
-    }
+       // }
+   // }
 
 
 }
