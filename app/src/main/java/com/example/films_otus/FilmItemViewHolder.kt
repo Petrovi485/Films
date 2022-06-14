@@ -1,18 +1,21 @@
 package com.example.films_otus
-import android.annotation.SuppressLint
-import android.util.Log
+import android.app.Activity
+import android.content.Context
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
     private val imageIm: ImageView = itemView.findViewById(R.id.ivImage)
      private var tvName: TextView = itemView.findViewById(R.id.tvName)
     private val btFavorite: ImageButton = itemView.findViewById(R.id.btFavor)
     private val bd1: Button = itemView.findViewById(R.id.bd1)
+    lateinit var mCtx: Context
+
 
 
     fun bind(item: FilmItem, listener: FilmItemAdapter.NewClickListener) {
@@ -23,6 +26,7 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
 
        if (item.isFavorite) {
             btFavorite.setBackgroundResource(R.drawable.ic_baseline_favorite_24)
+
 
         } else {
            btFavorite.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)

@@ -1,4 +1,5 @@
 package com.example.films_otus.screens.main
+import android.app.Activity
 import android.content.ClipData
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentListBinding
 import com.example.films_otus.screens.details.DetailsFragment
+import com.google.android.material.snackbar.Snackbar
 
 class ListFragment: Fragment() {
 
@@ -69,6 +71,20 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
    override fun onFavoriteClick(item: FilmItem, position: Int) {
        FilmData.filmlist[position].isFavorite = !FilmData.filmlist[position].isFavorite
        binding.recycler.adapter?.notifyItemChanged(position)
+
+
+
+       view?.let {
+           Snackbar.make(it,
+               if (FilmData.filmlist[position].isFavorite) "Фильм ${FilmData.filmlist[position].name} добавлен в избранное"
+               else "Фильм ${FilmData.filmlist[position].name} удален из избранного", Snackbar.LENGTH_LONG)
+               .setAction("Отмена") {
+                   FilmData.filmlist[position].isFavorite = !FilmData.filmlist[position].isFavorite
+                   binding.recycler.adapter?.notifyItemChanged(position)
+                                  }
+               .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+               .show()
+       }
 
    }
 }

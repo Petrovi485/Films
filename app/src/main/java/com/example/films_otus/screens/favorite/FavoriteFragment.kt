@@ -11,6 +11,7 @@ import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentFavoriteBinding
 import com.example.films_otus.screens.details.DetailsFragment
+import com.google.android.material.snackbar.Snackbar
 
 class FavoriteFragment: Fragment() {
 
@@ -59,6 +60,20 @@ class FavoriteFragment: Fragment() {
             val positionInMainList = FilmData.filmlist.indexOf(item)
             FilmData.filmlist[positionInMainList].isFavorite = !FilmData.filmlist[positionInMainList].isFavorite
             filmItemAdapter?.deleteFavoriteItem(position)
+
+            view?.let {
+                Snackbar.make(it,
+                    if (FilmData.filmlist[position].isFavorite) "Фильм ${FilmData.filmlist[position].name} добавлен в избранное"
+                    else "Фильм ${FilmData.filmlist[position].name} удален из избранного", Snackbar.LENGTH_LONG)
+                    .setAction("Отмена") {
+                        FilmData.filmlist[positionInMainList].isFavorite = !FilmData.filmlist[positionInMainList].isFavorite
+                        binding.recyclerfavorite.adapter?.notifyItemChanged(position)
+                    }
+                    .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+                    .show()
+            }
+
+
         }
     }
 }

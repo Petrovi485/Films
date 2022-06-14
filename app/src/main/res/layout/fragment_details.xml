@@ -16,7 +16,9 @@
         android:layout_height ="wrap_content"
         app:contentScrim ="?attr/colorPrimary"
         app:layout_scrollFlags ="scroll|exitUntilCollapsed"
-        app:toolbarId="@id/toolbar">
+        app:toolbarId="@id/toolbar"
+        app:collapsedTitleTextColor="@color/white"
+        >
 
         <ImageView
             android:id="@+id/ivDetail"
@@ -30,7 +32,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin" />
+            app:layout_collapseMode="pin"
+            app:subtitleTextColor="@color/white"
+            app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -58,9 +62,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_baseline_favorite_24"
+        app:borderWidth="0dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="end|bottom"
-        app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        app:maxImageSize="40dp" />
+
+    />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,15 +12,12 @@ import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.screens.favorite.FavoriteFragment
 import com.example.films_otus.R
 import com.example.films_otus.databinding.ActivityMainBinding
+import com.example.films_otus.screens.details.CallBackDetails
 import com.example.films_otus.screens.details.DetailsFragment
 
-class MainActivity : AppCompatActivity() {
-
-
-   // var filmItemAdapter: FilmItemAdapter? = null
+class MainActivity : AppCompatActivity(), CallBackDetails {
 
     lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,16 +30,13 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
 
-
-        //initClickListener()
-
         binding.bottomNav?.setOnItemSelectedListener {
 
             when (it.itemId) {
 
                 R.id.like -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_main, FavoriteFragment())
+                        .replace(R.id.frame_main, FavoriteFragment(), "123")
                         .addToBackStack(null)
                         .commit()
 
@@ -75,55 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun initClickListener() {
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        initRecycler()
-    }
-
-    private fun initRecycler() {
-        val filmlist = FilmData.filmlist as MutableList<FilmItem>
-        filmItemAdapter = FilmItemAdapter(filmlist, newClickListener)
-        binding.recycler.adapter = filmItemAdapter
-
-
-        val divider = DividerItemDecoration(
-            this, DividerItemDecoration
-                .VERTICAL
-        )
-        ResourcesCompat.getDrawable(resources, R.drawable.divider, theme)
-            ?.let { divider.setDrawable(it) }
-        binding.recycler.addItemDecoration(divider)
-
-    }
-
-    private val newClickListener = object : FilmItemAdapter.NewClickListener{
-        override fun onDetailsClick(item: FilmItem, position: Int) {
-
-        }
-
-        override fun onFavoriteClick(item: FilmItem, position: Int) {
-            FilmData.filmlist[position].isFavorite = !FilmData.filmlist[position].isFavorite
-            binding.recycler.adapter?.notifyItemChanged(position)
-
-        }
-    }
-
-
-
-
-
-    fun ClickLike(view: View) {
-
-        val intent = Intent(this@MainActivity, Favorite::class.java)
-        startActivity(intent)
-
-    }*/
-
-
 
     override fun onBackPressed() {
 
@@ -141,28 +86,16 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton("Да") { dialog, which -> finish() }
                 .create()
                 .show()
-
         }
     }
 
+    override fun onFavoriteToggled(filmitem: FilmItem) {
+        FilmData.filmlist.find {
+            it.name == filmitem.name
 
+        }?.isFavorite = filmitem.isFavorite
 
-  /*  fun favorite (view: View){
-
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_main, FavoriteFragment())
-            .commit()
-
-        btFav.setVisibility(View.INVISIBLE)
-
-
-
-
-
-
-
-
-    }*/
+    }
 
 }
 

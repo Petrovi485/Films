@@ -1,10 +1,9 @@
 package com.example.films_otus.screens.details
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.example.films_otus.FilmItem
 import com.example.films_otus.R
@@ -13,6 +12,16 @@ class DetailsFragment: Fragment() {
 
     lateinit var binding: FragmentDetailsBinding
     lateinit var currentMovie: FilmItem
+    var callBackDetails: CallBackDetails? = null
+
+    override fun onAttach(context: Context) {
+
+        if (context is CallBackDetails) callBackDetails = context
+
+
+        super.onAttach(context)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +35,8 @@ class DetailsFragment: Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,23 +45,22 @@ class DetailsFragment: Fragment() {
             binding.tvTitle.setText(currentMovie.title)
 
         if (currentMovie.isFavorite) {
-           binding.btFavorDetails.setBackgroundResource(R.drawable.ic_baseline_favorite_24)}
-        else {binding.btFavorDetails.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)}
+           binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_24)}
+        else {binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_border_24)}
 
         binding.btFavorDetails.setOnClickListener {
 
+            val bool = currentMovie.isFavorite
+            currentMovie.isFavorite = !bool
 
-            currentMovie?.isFavorite = binding.btFavorDetails.isSelected
-            if (binding.btFavorDetails.isSelected) {
-                binding.btFavorDetails.setBackgroundResource(R.drawable.ic_baseline_favorite_24)
-            } else {
-                binding.btFavorDetails.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24)
-            }
+            if (currentMovie.isFavorite) {
+                binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_24)}
+            else {binding.btFavorDetails.setImageResource(R.drawable.ic_baseline_favorite_border_24)}
 
-            val result = Bundle()
-            result.putSerializable("EXTRA_FILM", currentMovie)
-            parentFragmentManager.setFragmentResult("detailsresult", result)
-            super.onPause()
+            callBackDetails?.onFavoriteToggled(currentMovie)
+
+
+
         }
 
     }
@@ -67,15 +77,13 @@ class DetailsFragment: Fragment() {
             fragment.arguments = args
             return fragment
 
-
         }
-
-
 
     }
 
+}
 
-
-
+interface CallBackDetails {
+ fun  onFavoriteToggled (filmitem: FilmItem)
 
 }
