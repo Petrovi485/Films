@@ -1,26 +1,36 @@
 package com.example.films_otus.screens.main
-import android.app.Activity
-import android.content.ClipData
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.films_otus.FilmData
-import com.example.films_otus.FilmItem
+import androidx.lifecycle.ViewModelProvider
+import com.example.films_otus.API.App
+import com.example.films_otus.API.MainItem
+import com.example.films_otus.API.RetrofiFilmItem
 import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentListBinding
 import com.example.films_otus.screens.details.DetailsFragment
+import com.example.films_otus.screens.details.DetailsFragmentViewModel
 import com.google.android.material.snackbar.Snackbar
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Callback
 
 class ListFragment: Fragment() {
 
-    var filmItemAdapter: FilmItemAdapter? = null
+
 
     lateinit var binding: FragmentListBinding
 
-    lateinit var films: MutableList<FilmItem>
+     var films = mutableListOf<MainItem>()
+
+
+
+
+    lateinit var filmItemAdapter: FilmItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -52,15 +62,55 @@ private fun initClickListener() {
 }
 
 private fun initRecycler() {
+    Log.d("Mylog", "Yes Data1")
 
-   val filmlist = FilmData.filmlist as MutableList<FilmItem>
-   filmItemAdapter = FilmItemAdapter(filmlist, newClickListener)
+   //val filmlist = MainItem as MutableList<MainItem>
+    val viewModel = ViewModelProvider(this).get(ListFragmentViewModel::class.java)
+   filmItemAdapter = FilmItemAdapter(films, newClickListener)
    binding.recycler.adapter = filmItemAdapter
+
+    App.instance.api.getFilms().enqueue(object: Callback<RetrofiFilmItem>
+        {
+            override fun onResponse(
+                call: Call<RetrofiFilmItem>,
+                response: Response<RetrofiFilmItem>
+            ) {
+
+
+                films.clear()
+
+                if (response.isSuccessful){
+
+                    response.body()?.items?.forEach { model ->
+                        films.add(MainItem(
+
+                            model.nameRu,
+                            model.posterUrlPreview,
+                            model.posterUrl,
+                            model.isFavorite
+                        ))
+
+                    }
+                }
+                filmItemAdapter!!.notifyDataSetChanged()
+
+            }
+
+            override fun onFailure(call: Call<RetrofiFilmItem>, t: Throwable) {
+
+                t.printStackTrace()
+
+            }
+
+
+        })
+
+    filmItemAdapter!!.notifyDataSetChanged()
 
 }
 
 private val newClickListener = object : FilmItemAdapter.NewClickListener {
-   override fun onDetailsClick(item: FilmItem, position: Int) {
+   override fun onDetailsClick(item: MainItem, position: Int) {
 
        parentFragmentManager.beginTransaction()
            .replace(R.id.frame_main, DetailsFragment.newInstance(item))
@@ -68,18 +118,18 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
            .commit()
    }
 
-   override fun onFavoriteClick(item: FilmItem, position: Int) {
-       FilmData.filmlist[position].isFavorite = !FilmData.filmlist[position].isFavorite
+   override fun onFavoriteClick(item: MainItem, position: Int) {
+       films[position].isFavorite = !films[position].isFavorite
        binding.recycler.adapter?.notifyItemChanged(position)
 
 
 
        view?.let {
            Snackbar.make(it,
-               if (FilmData.filmlist[position].isFavorite) "Фильм ${FilmData.filmlist[position].name} добавлен в избранное"
-               else "Фильм ${FilmData.filmlist[position].name} удален из избранного", Snackbar.LENGTH_LONG)
+               if (films[position].isFavorite) "Фильм ${films[position].name} добавлен в избранное"
+               else "Фильм ${films[position].name} удален из избранного", Snackbar.LENGTH_LONG)
                .setAction("Отмена") {
-                   FilmData.filmlist[position].isFavorite = !FilmData.filmlist[position].isFavorite
+                   films[position].isFavorite = !films[position].isFavorite
                    binding.recycler.adapter?.notifyItemChanged(position)
                                   }
                .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
@@ -99,3 +149,5 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
 
 
 }
+
+

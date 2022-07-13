@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.films_otus.FilmData
-import com.example.films_otus.FilmItem
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.example.films_otus.API.MainItem
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentDetailsBinding
 import com.google.android.material.snackbar.Snackbar
@@ -14,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 class DetailsFragment: Fragment() {
 
     lateinit var binding: FragmentDetailsBinding
-    lateinit var currentMovie: FilmItem
+    lateinit var currentMovie: MainItem
     var callBackDetails: CallBackDetails? = null
 
     override fun onAttach(context: Context) {
@@ -33,7 +34,7 @@ class DetailsFragment: Fragment() {
     ): View? {
 
         binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
-        currentMovie = arguments?.getSerializable("film") as FilmItem
+        currentMovie = arguments?.getSerializable("film") as MainItem
 
         return binding.root
     }
@@ -43,9 +44,21 @@ class DetailsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-            binding.toolbar.title = currentMovie.name
-            binding.ivDetail.setImageResource(currentMovie.image)
-            binding.tvTitle.setText(currentMovie.title)
+            //binding.toolbar.title = currentMovie.name
+
+        val viewModel = ViewModelProvider(this).get(DetailsFragmentViewModel::class.java)
+
+            binding.tvTitle.setText(currentMovie.name)
+
+
+        Glide.with(binding.ivDetail.context)
+            .load(currentMovie.posterUrl)
+            .fitCenter()
+            .placeholder(R.drawable.ic_image)
+            .error(R.drawable.ic_error)
+            .into(binding.ivDetail)
+
+
             setImageRes()
 
         binding.btFavorDetails.setOnClickListener {
@@ -81,7 +94,7 @@ class DetailsFragment: Fragment() {
 
         const val DETAIL_FRAGMENT_FILM_KEY = "film"
 
-        fun newInstance(filmItem: FilmItem): Fragment {
+        fun newInstance(filmItem: MainItem): Fragment {
             val args = Bundle()
             args.putSerializable(DETAIL_FRAGMENT_FILM_KEY, filmItem)
             val fragment = DetailsFragment()
@@ -103,6 +116,6 @@ class DetailsFragment: Fragment() {
 }
 
 interface CallBackDetails {
- fun  onFavoriteToggled (filmitem: FilmItem)
+ fun  onFavoriteToggled (filmitem: MainItem)
 
 }
