@@ -5,21 +5,104 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.films_otus.API.App
-import com.example.films_otus.API.MainItem
-import com.example.films_otus.API.RetrofiFilmItem
 import com.example.films_otus.FilmItemAdapter
-import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentListBinding
-import com.example.films_otus.screens.details.DetailsFragment
-import com.example.films_otus.screens.details.DetailsFragmentViewModel
-import com.google.android.material.snackbar.Snackbar
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.Callback
+import com.example.films_otus.domain.DevByteFilm
+
 
 class ListFragment: Fragment() {
+    lateinit var binding: FragmentListBinding
+
+
+
+
+     lateinit var filmItemAdapter: FilmItemAdapter
+
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentListBinding.inflate(layoutInflater,  container, false)
+
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        initRecycler()
+    }
+
+    private fun initRecycler() {
+
+        val viewModel: ListFragmentViewModel by lazy {
+            val activity = requireNotNull(this.activity) {
+            }
+            ViewModelProvider(this, ListFragmentViewModel.Factory(activity.application))[ListFragmentViewModel::class.java]
+        }
+
+        viewModel.films.observe(viewLifecycleOwner, Observer<List<DevByteFilm>> { films ->
+            films?.apply {
+                 filmItemAdapter = FilmItemAdapter()
+                filmItemAdapter.film = films
+            }
+        })
+
+
+        //val filmlist = MainItem as MutableList<MainItem>
+        //val viewModel = ViewModelProvider(this).get(ListFragmentViewModel::class.java)
+
+        binding.recycler.adapter = filmItemAdapter
+
+        /*App.instance.api.getFilms().enqueue(object: Callback<RetrofiFilmItem>
+        {
+            override fun onResponse(
+                call: Call<RetrofiFilmItem>,
+                response: Response<RetrofiFilmItem>
+            ) {
+
+
+                films.clear()
+
+                if (response.isSuccessful){
+
+                    response.body()?.items?.forEach { model ->
+                        films.add(MainItem(
+
+                            model.nameRu,
+                            model.posterUrlPreview,
+                            model.posterUrl,
+                            model.isFavorite
+                        ))
+
+                    }
+                }
+                filmItemAdapter!!.notifyDataSetChanged()
+
+            }
+
+            override fun onFailure(call: Call<RetrofiFilmItem>, t: Throwable) {
+
+                t.printStackTrace()
+
+            }
+
+
+        })*/
+
+
+
+    }
+}
+
+/*class ListFragment: Fragment() {
 
 
 
@@ -148,6 +231,6 @@ private val newClickListener = object : FilmItemAdapter.NewClickListener {
    // }
 
 
-}
+}*/
 
 

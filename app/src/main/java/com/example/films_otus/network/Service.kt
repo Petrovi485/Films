@@ -1,17 +1,20 @@
-package com.example.films_otus.API
+package com.example.films_otus.network
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
-import com.example.films_otus.Room.AppDataBase
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
 
-class App:Application() {
+
+interface Api {
+        @GET ("premieres?year=2022&month=JANUARY")
+
+        fun getFilms(): NetworkFilmsContainer
+    }
+
+class App: Application() {
 
     lateinit var api: Api
 
@@ -41,14 +44,14 @@ class App:Application() {
         api = retrofit.create(Api::class.java)
 
 
-        Executors.newSingleThreadExecutor().execute {
-            Runnable {
-                AppDataBase.getInstance(this)
+        //Executors.newSingleThreadExecutor().execute {
+        //  Runnable {
+        //    AppDataBase.getInstance(this)
+//
 
+        // }
 
-            }
-
-        }
+        //}
     }
 
     companion object {
@@ -56,7 +59,7 @@ class App:Application() {
         const val BASE_URL = "https://kinopoiskapiunofficial.tech/api/v2.2/films/"
 
         lateinit var instance: App
-        private set
+            private set
 
 
     }

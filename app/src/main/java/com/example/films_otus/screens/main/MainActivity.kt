@@ -5,14 +5,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.example.films_otus.API.MainItem
 import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.screens.favorite.FavoriteFragment
 import com.example.films_otus.R
 import com.example.films_otus.databinding.ActivityMainBinding
-import com.example.films_otus.screens.details.CallBackDetails
+import com.example.films_otus.domain.DevByteFilm
 
-class MainActivity : AppCompatActivity(), CallBackDetails {
+//import com.example.films_otus.screens.details.CallBackDetails
+
+class MainActivity : AppCompatActivity() /*CallBackDetails*/ {
 
     lateinit var binding: ActivityMainBinding
 
@@ -57,11 +58,11 @@ class MainActivity : AppCompatActivity(), CallBackDetails {
     }
 
     private val newClickListener = object : FilmItemAdapter.NewClickListener {
-        override fun onDetailsClick(item: MainItem, position: Int) {
+        override fun onDetailsClick(item: DevByteFilm, position: Int) {
 
         }
 
-        override fun onFavoriteClick(item: MainItem, position: Int) {
+        override fun onFavoriteClick(item: DevByteFilm, position: Int) {
 
         }
     }
@@ -86,13 +87,13 @@ class MainActivity : AppCompatActivity(), CallBackDetails {
         }
     }
 
-    override fun onFavoriteToggled(filmitem: MainItem) {
+    //override fun onFavoriteToggled(filmitem: DevByteFilm) {
         //FilmData.filmlist.find {
        //     it.name == filmitem.name
 
         //}?.isFavorite = filmitem.isFavorite
 
-    }
+  //  }
 
 }
 

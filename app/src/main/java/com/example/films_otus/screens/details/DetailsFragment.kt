@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.films_otus.API.MainItem
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentDetailsBinding
+import com.example.films_otus.domain.DevByteFilm
 import com.google.android.material.snackbar.Snackbar
 
 class DetailsFragment: Fragment() {
 
-    lateinit var binding: FragmentDetailsBinding
-    lateinit var currentMovie: MainItem
+   /* lateinit var binding: FragmentDetailsBinding
+    lateinit var currentMovie: DevByteFilm
     var callBackDetails: CallBackDetails? = null
 
     override fun onAttach(context: Context) {
@@ -116,6 +116,6 @@ class DetailsFragment: Fragment() {
 }
 
 interface CallBackDetails {
- fun  onFavoriteToggled (filmitem: MainItem)
+ fun  onFavoriteToggled (filmitem: MainItem)*/
 
 }

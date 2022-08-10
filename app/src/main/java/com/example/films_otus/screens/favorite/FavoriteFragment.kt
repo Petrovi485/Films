@@ -7,17 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.films_otus.API.MainItem
 import com.example.films_otus.FilmItemAdapter
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentFavoriteBinding
 import com.example.films_otus.screens.details.DetailsFragment
-import com.example.films_otus.screens.details.DetailsFragmentViewModel
-import java.util.Locale.filter
 
 class FavoriteFragment: Fragment() {
 
-    var filmItemAdapter: FilmItemAdapter? = null
+    /*var filmItemAdapter: FilmItemAdapter? = null
     lateinit var binding: FragmentFavoriteBinding
     lateinit var listOfFavoriteFilms: MutableList<MainItem>
 
@@ -87,5 +84,5 @@ class FavoriteFragment: Fragment() {
 
 
         }
-    }
+    }*/
 }

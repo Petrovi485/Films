@@ -1,13 +1,12 @@
 package com.example.films_otus
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.films_otus.API.MainItem
+import com.example.films_otus.domain.DevByteFilm
 
 class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
     private val imageIm: ImageView = itemView.findViewById(R.id.ivImage)
@@ -18,11 +17,11 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
 
 
 
-    fun bind(item: MainItem, listener: FilmItemAdapter.NewClickListener) {
-        tvName.text = item.name
+    fun bind(item: DevByteFilm, listener: FilmItemAdapter.NewClickListener) {
+        tvName.text = item.nameRu
 
         Glide.with(imageIm.context)
-            .load(item.posterUrlPreview)
+            .load(item.posterUrl)
             .fitCenter()
             .placeholder(R.drawable.ic_image)
             .error(R.drawable.ic_error)
