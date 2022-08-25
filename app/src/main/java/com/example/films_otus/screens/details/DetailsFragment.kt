@@ -14,7 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 
 class DetailsFragment: Fragment() {
 
-   /* lateinit var binding: FragmentDetailsBinding
+    lateinit var binding: FragmentDetailsBinding
     lateinit var currentMovie: DevByteFilm
     var callBackDetails: CallBackDetails? = null
 
@@ -34,7 +34,7 @@ class DetailsFragment: Fragment() {
     ): View? {
 
         binding = FragmentDetailsBinding.inflate(layoutInflater, container, false)
-        currentMovie = arguments?.getSerializable("film") as MainItem
+        currentMovie = arguments?.getSerializable("film") as DevByteFilm
 
         return binding.root
     }
@@ -48,7 +48,7 @@ class DetailsFragment: Fragment() {
 
         val viewModel = ViewModelProvider(this).get(DetailsFragmentViewModel::class.java)
 
-            binding.tvTitle.setText(currentMovie.name)
+            binding.tvTitle.setText(currentMovie.nameRu)
 
 
         Glide.with(binding.ivDetail.context)
@@ -70,8 +70,8 @@ class DetailsFragment: Fragment() {
 
             view.let {
                 Snackbar.make(it,
-                    if (currentMovie.isFavorite) "Фильм ${currentMovie.name} добавлен в избранное"
-                    else "Фильм ${currentMovie.name} удален из избранного", Snackbar.LENGTH_LONG)
+                    if (currentMovie.isFavorite) "Фильм ${currentMovie.nameRu} добавлен в избранное"
+                    else "Фильм ${currentMovie.nameRu} удален из избранного", Snackbar.LENGTH_LONG)
 
 
                     .setAction("Отмена") {
@@ -94,7 +94,7 @@ class DetailsFragment: Fragment() {
 
         const val DETAIL_FRAGMENT_FILM_KEY = "film"
 
-        fun newInstance(filmItem: MainItem): Fragment {
+        fun newInstance(filmItem: DevByteFilm): Fragment {
             val args = Bundle()
             args.putSerializable(DETAIL_FRAGMENT_FILM_KEY, filmItem)
             val fragment = DetailsFragment()
@@ -116,6 +116,6 @@ class DetailsFragment: Fragment() {
 }
 
 interface CallBackDetails {
- fun  onFavoriteToggled (filmitem: MainItem)*/
+ fun  onFavoriteToggled (filmitem: DevByteFilm)
 
 }

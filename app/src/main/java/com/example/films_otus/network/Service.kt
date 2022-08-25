@@ -1,17 +1,19 @@
 package com.example.films_otus.network
 
 import android.app.Application
+import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import java.util.concurrent.TimeUnit
+import com.example.films_otus.network.NetworkFilmsContainer as NetworkFilmsContainer1
 
 
 interface Api {
         @GET ("premieres?year=2022&month=JANUARY")
 
-        fun getFilms(): NetworkFilmsContainer
+        suspend fun getFilms(): NetworkFilmsContainer1
     }
 
 class App: Application() {
@@ -33,7 +35,7 @@ class App: Application() {
                 val request = requestBuilder.build()
                 chain.proceed(request)
             }.build()
-
+        Log.d ("Mylog", "OKOKHTTP")
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -41,7 +43,10 @@ class App: Application() {
             .client(client)
             .build()
 
+        Log.d ("Mylog", "OKRetrofit")
+
         api = retrofit.create(Api::class.java)
+        Log.d ("Mylog", "OKAPI")
 
 
         //Executors.newSingleThreadExecutor().execute {

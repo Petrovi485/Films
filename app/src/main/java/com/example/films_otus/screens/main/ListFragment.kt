@@ -8,17 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.films_otus.FilmItemAdapter
+import com.example.films_otus.FilmItemViewHolder
+import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentListBinding
 import com.example.films_otus.domain.DevByteFilm
+import com.example.films_otus.screens.details.DetailsFragment
+import com.google.android.material.snackbar.Snackbar
 
 
 class ListFragment: Fragment() {
+
     lateinit var binding: FragmentListBinding
 
+     private var filmItemAdapter: FilmItemAdapter? = null
+
+    var filmses = mutableListOf<DevByteFilm>()
 
 
 
-     lateinit var filmItemAdapter: FilmItemAdapter
 
 
 
@@ -35,7 +42,7 @@ class ListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d ("Mylog", "onViewCreated - OK")
 
         initRecycler()
     }
@@ -47,57 +54,63 @@ class ListFragment: Fragment() {
             }
             ViewModelProvider(this, ListFragmentViewModel.Factory(activity.application))[ListFragmentViewModel::class.java]
         }
-
-        viewModel.films.observe(viewLifecycleOwner, Observer<List<DevByteFilm>> { films ->
-            films?.apply {
-                 filmItemAdapter = FilmItemAdapter()
-                filmItemAdapter.film = films
-            }
-        })
-
-
-        //val filmlist = MainItem as MutableList<MainItem>
-        //val viewModel = ViewModelProvider(this).get(ListFragmentViewModel::class.java)
-
+        filmItemAdapter = FilmItemAdapter(filmses, newClickListener)
         binding.recycler.adapter = filmItemAdapter
 
-        /*App.instance.api.getFilms().enqueue(object: Callback<RetrofiFilmItem>
-        {
-            override fun onResponse(
-                call: Call<RetrofiFilmItem>,
-                response: Response<RetrofiFilmItem>
-            ) {
+
+        Log.d ("Mylog", "initRecycler- OK")
+
+        try { viewModel.films.observe(viewLifecycleOwner) { films ->
+            films?.apply {
+               try {
+
+                   filmItemAdapter?.film = films
 
 
-                films.clear()
+               } catch (e:Exception) {
+                   Log.d("Mylog", "Error")
+               }
+            }
+        }
+        } catch (e:Exception) {
+            Log.d("Mylog", "Error")
+        }
 
-                if (response.isSuccessful){
 
-                    response.body()?.items?.forEach { model ->
-                        films.add(MainItem(
 
-                            model.nameRu,
-                            model.posterUrlPreview,
-                            model.posterUrl,
-                            model.isFavorite
-                        ))
+        Log.d ("Mylog", "binding.recycler - OK")
 
+    }
+
+    private val newClickListener = object : FilmItemAdapter.NewClickListener {
+        override fun onDetailsClick(item: DevByteFilm, position: Int) {
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frame_main, DetailsFragment.newInstance(item))
+                .addToBackStack(null)
+                .commit()
+        }
+
+
+        override fun onFavoriteClick(item: DevByteFilm, position: Int) {
+            filmses[position].isFavorite = !filmses[position].isFavorite
+            binding.recycler.adapter?.notifyItemChanged(position)
+
+
+
+            view?.let {
+                Snackbar.make(it,
+                    if (filmses[position].isFavorite) "Фильм ${filmses[position].nameRu} добавлен в избранное"
+                    else "Фильм ${filmses[position].nameRu} удален из избранного", Snackbar.LENGTH_LONG)
+                    .setAction("Отмена") {
+                        filmses[position].isFavorite = !filmses[position].isFavorite
+                        binding.recycler.adapter?.notifyItemChanged(position)
                     }
-                }
-                filmItemAdapter!!.notifyDataSetChanged()
-
+                    .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+                    .show()
             }
 
-            override fun onFailure(call: Call<RetrofiFilmItem>, t: Throwable) {
-
-                t.printStackTrace()
-
-            }
-
-
-        })*/
-
-
+        }
 
     }
 }

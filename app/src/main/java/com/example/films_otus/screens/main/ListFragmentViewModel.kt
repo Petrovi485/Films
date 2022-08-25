@@ -30,8 +30,9 @@ class ListFragmentViewModel(application: Application): AndroidViewModel(applicat
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
             try {
-                Log.d ("Mylog", "OK")
+                Log.d ("Mylog", "OK1")
                 filmRepository.refreshVideos()
+                Log.d ("Mylog", "OK2")
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 
@@ -39,7 +40,7 @@ class ListFragmentViewModel(application: Application): AndroidViewModel(applicat
             } catch (networkError: IOException) {
                 if(films.value.isNullOrEmpty())
                     _eventNetworkError.value = true
-                Log.d ("Mylog", "${_eventNetworkError.value}" )
+                Log.d ("Mylog", "catch ${_eventNetworkError.value}" )
             }
         }
     }

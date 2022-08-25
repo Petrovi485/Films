@@ -10,7 +10,7 @@ interface MainDao {
     @Query("select * from databasefilm")
     fun getMovies(): LiveData<List<DatabaseFilm>>
 
-    @Insert
+    @Insert (onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovies(items: List<DatabaseFilm>)
 }
 
@@ -19,22 +19,22 @@ interface MainDao {
     entities = [DatabaseFilm::class]
 
 )
-abstract class AppDB: RoomDatabase() {
+abstract class AppDB2: RoomDatabase() {
 
     abstract val mainDao: MainDao
 }
 
 object AppDataBase {
 
-    private var INSTANCE: AppDB? = null
+    private var INSTANCE: AppDB2? = null
 
-    fun getInstance(context: Context): AppDB? {
+    fun getInstance(context: Context): AppDB2? {
 
         if (INSTANCE == null) {
             synchronized(AppDataBase){
                 INSTANCE = Room.databaseBuilder(context,
-                    AppDB::class.java,
-                    "DATABASE")
+                    AppDB2::class.java,
+                    "FILM_DATABASE")
                     .build()
             }
 
