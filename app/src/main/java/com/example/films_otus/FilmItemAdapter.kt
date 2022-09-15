@@ -2,14 +2,12 @@ package com.example.films_otus
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.films_otus.database.DatabaseFilm
 import com.example.films_otus.domain.DevByteFilm
-import com.example.films_otus.network.Item
-
-
 
 
 class FilmItemAdapter(
-    private var films: MutableList<DevByteFilm>,
+    var films: MutableList<DevByteFilm>,
     private var listener: NewClickListener
 
 ): RecyclerView.Adapter<FilmItemViewHolder>() {
@@ -27,14 +25,15 @@ class FilmItemAdapter(
 
     }
 
-    override fun getItemCount(): Int {
 
-        return films.size
+    override fun onBindViewHolder(holder: FilmItemViewHolder, position: Int) {
+        holder.bind(film[position], listener)
 
     }
 
-    override fun onBindViewHolder(holder: FilmItemViewHolder, position: Int) {
-        holder.bind(films[position], listener)
+    override fun getItemCount(): Int {
+
+        return film.size
 
     }
 
@@ -43,6 +42,8 @@ class FilmItemAdapter(
 
         fun onDetailsClick(item: DevByteFilm, position: Int)
         fun onFavoriteClick(item: DevByteFilm, position: Int)
+        fun onLateClick(item: DevByteFilm, position: Int)
+
     }
 
 

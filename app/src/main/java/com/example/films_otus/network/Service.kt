@@ -1,27 +1,64 @@
 package com.example.films_otus.network
 
 import android.app.Application
+import android.media.MediaPlayer
 import android.util.Log
+import com.example.films_otus.domain.PostFire
+import com.example.films_otus.domain.PostItem
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import java.util.concurrent.TimeUnit
-import com.example.films_otus.network.NetworkFilmsContainer as NetworkFilmsContainer1
+
 
 
 interface Api {
         @GET ("premieres?year=2022&month=JANUARY")
 
-        suspend fun getFilms(): NetworkFilmsContainer1
+        suspend fun getFilms(): NetworkFilmsContainer
     }
+
+interface ApiFire{
+    @POST ("fcm/send")
+
+    suspend fun postNot(@Body elementBody: PostItem)
+}
+
+
 
 class App: Application() {
 
-    lateinit var api: Api
+    lateinit var apiMain: Api
+
+    lateinit var apiFire: ApiFire
 
     override fun onCreate() {
         super.onCreate()
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("Mylog", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            Log.d("Mylog", "Token IS -> $token")
+        })
+
+
+
         instance = this
 
         val client = OkHttpClient.Builder()
@@ -35,7 +72,6 @@ class App: Application() {
                 val request = requestBuilder.build()
                 chain.proceed(request)
             }.build()
-        Log.d ("Mylog", "OKOKHTTP")
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -43,25 +79,40 @@ class App: Application() {
             .client(client)
             .build()
 
-        Log.d ("Mylog", "OKRetrofit")
-
-        api = retrofit.create(Api::class.java)
-        Log.d ("Mylog", "OKAPI")
+        apiMain = retrofit.create(Api::class.java)
 
 
-        //Executors.newSingleThreadExecutor().execute {
-        //  Runnable {
-        //    AppDataBase.getInstance(this)
-//
+        val logging = HttpLoggingInterceptor()
+        logging.level = (HttpLoggingInterceptor.Level.BODY)
 
-        // }
+        val clientFire = OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                    .header("Authorization", "key=AAAAAj2IeBg:APA91bG4IDw2vwCjShiScuucDiUVJv_HvvIdbQ5nBsPZgr9dmzgeXxKd-dcSd8U1b4yeb2jXlcVKS90XoJZiYo1DKpl64OPJXkDewB--8tnJFXpkQX5X6X1hxVmxk2eMt6LW7DsEP3CO")
 
-        //}
+                val request = requestBuilder.build()
+                chain.proceed(request)
+            }
+            .addInterceptor(logging)
+            .build()
+
+        val retrofitFire = Retrofit.Builder()
+            .baseUrl(BASE_URL_FIRE)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(clientFire)
+            .build()
+
+        apiFire = retrofitFire.create(ApiFire::class.java)
+
     }
 
     companion object {
 
         const val BASE_URL = "https://kinopoiskapiunofficial.tech/api/v2.2/films/"
+        const val BASE_URL_FIRE = "https://fcm.googleapis.com"
 
         lateinit var instance: App
             private set

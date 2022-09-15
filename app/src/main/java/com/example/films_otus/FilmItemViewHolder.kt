@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.films_otus.database.DatabaseFilm
 import com.example.films_otus.domain.DevByteFilm
 
 class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
@@ -13,6 +14,7 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
      private var tvName: TextView = itemView.findViewById(R.id.tvName)
     private val btFavorite: ImageButton = itemView.findViewById(R.id.btFavor)
    private val bd1: CardView = itemView.findViewById(R.id.bd1)
+    private val btlate: ImageButton = itemView.findViewById(R.id.btlate)
     //lateinit var mCtx: Context
 
 
@@ -46,6 +48,11 @@ class FilmItemViewHolder(item: View): RecyclerView.ViewHolder(item) {
             listener.onDetailsClick(item, adapterPosition)
 
         }
+
+        btlate.setOnClickListener {
+            listener.onLateClick(item, adapterPosition)
+        }
+
     }
 
 

@@ -19,7 +19,6 @@ data class Item(
     val premiereRu: String,
     val year: Int,
     val isFavorite: Boolean
-
     )
 
 fun NetworkFilmsContainer.asDomainModel(): List<DevByteFilm> {

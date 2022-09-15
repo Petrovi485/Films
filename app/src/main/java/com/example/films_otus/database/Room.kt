@@ -3,6 +3,7 @@ package com.example.films_otus.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.films_otus.domain.DevByteFilm
 
 @Dao
 interface MainDao {
@@ -12,6 +13,9 @@ interface MainDao {
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMovies(items: List<DatabaseFilm>)
+
+    @Update
+    suspend fun updateFilm(item: DatabaseFilm)
 }
 
 @Database(
@@ -26,7 +30,7 @@ abstract class AppDB2: RoomDatabase() {
 
 object AppDataBase {
 
-    private var INSTANCE: AppDB2? = null
+    var INSTANCE: AppDB2? = null
 
     fun getInstance(context: Context): AppDB2? {
 
@@ -47,4 +51,7 @@ object AppDataBase {
         INSTANCE?.close()
         INSTANCE = null
     }
+
+
+
 }

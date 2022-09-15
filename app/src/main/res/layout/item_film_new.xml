@@ -67,12 +67,24 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
-
                 android:layout_marginTop="116dp"
                 android:background="@drawable/ic_baseline_favorite_border_24"
                 app:layout_constraintEnd_toEndOf="@+id/ivImage"
                 app:layout_constraintStart_toStartOf="@+id/ivImage"
                 app:layout_constraintTop_toTopOf="@+id/ivImage" />
+
+            <ImageButton
+                android:id="@+id/btlate"
+                android:layout_width="54dp"
+                android:layout_height="47dp"
+                android:backgroundTint="@color/design_default_color_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.951"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.982"
+                app:srcCompat="@drawable/ic_baseline_watch_later_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

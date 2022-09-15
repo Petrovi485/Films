@@ -4,30 +4,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.films_otus.FilmItemAdapter
-import com.example.films_otus.FilmItemViewHolder
 import com.example.films_otus.R
 import com.example.films_otus.databinding.FragmentListBinding
 import com.example.films_otus.domain.DevByteFilm
 import com.example.films_otus.screens.details.DetailsFragment
 import com.google.android.material.snackbar.Snackbar
 
-
 class ListFragment: Fragment() {
 
     lateinit var binding: FragmentListBinding
-
      private var filmItemAdapter: FilmItemAdapter? = null
-
-    var filmses = mutableListOf<DevByteFilm>()
-
-
-
-
-
+    var films = mutableListOf<DevByteFilm>()
+    val viewModel: ListFragmentViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,73 +29,62 @@ class ListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentListBinding.inflate(layoutInflater,  container, false)
-
         return binding.root
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d ("Mylog", "onViewCreated - OK")
-
         initRecycler()
     }
 
     private fun initRecycler() {
-
         val viewModel: ListFragmentViewModel by lazy {
             val activity = requireNotNull(this.activity) {
             }
             ViewModelProvider(this, ListFragmentViewModel.Factory(activity.application))[ListFragmentViewModel::class.java]
         }
-        filmItemAdapter = FilmItemAdapter(filmses, newClickListener)
+        filmItemAdapter = FilmItemAdapter(films, newClickListener)
         binding.recycler.adapter = filmItemAdapter
 
-
-        Log.d ("Mylog", "initRecycler- OK")
-
-        try { viewModel.films.observe(viewLifecycleOwner) { films ->
+         viewModel.films.observe(viewLifecycleOwner) { films ->
             films?.apply {
-               try {
 
                    filmItemAdapter?.film = films
-
-
-               } catch (e:Exception) {
-                   Log.d("Mylog", "Error")
-               }
+                   Log.d ("Mylog", "ViewModel observe ${filmItemAdapter!!.film}")
             }
         }
-        } catch (e:Exception) {
-            Log.d("Mylog", "Error")
-        }
-
-
-
-        Log.d ("Mylog", "binding.recycler - OK")
 
     }
 
     private val newClickListener = object : FilmItemAdapter.NewClickListener {
         override fun onDetailsClick(item: DevByteFilm, position: Int) {
 
+            val result = item
+
+            setFragmentResult("requestKey", bundleOf("bundleKey" to result))
+
             parentFragmentManager.beginTransaction()
-                .replace(R.id.frame_main, DetailsFragment.newInstance(item))
+                .replace(R.id.frame_main, DetailsFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
-
         override fun onFavoriteClick(item: DevByteFilm, position: Int) {
+            val filmses = filmItemAdapter!!.film
+
             filmses[position].isFavorite = !filmses[position].isFavorite
+            viewModel.updateFilm(item, position)
             binding.recycler.adapter?.notifyItemChanged(position)
 
 
-
             view?.let {
-                Snackbar.make(it,
+                Snackbar.make(
+                    it,
                     if (filmses[position].isFavorite) "Фильм ${filmses[position].nameRu} добавлен в избранное"
-                    else "Фильм ${filmses[position].nameRu} удален из избранного", Snackbar.LENGTH_LONG)
+                    else "Фильм ${filmses[position].nameRu} удален из избранного",
+                    Snackbar.LENGTH_LONG
+                )
                     .setAction("Отмена") {
                         filmses[position].isFavorite = !filmses[position].isFavorite
                         binding.recycler.adapter?.notifyItemChanged(position)
@@ -112,138 +95,13 @@ class ListFragment: Fragment() {
 
         }
 
-    }
-}
+        override fun onLateClick(item: DevByteFilm, position: Int) {
 
-/*class ListFragment: Fragment() {
-
-
-
-    lateinit var binding: FragmentListBinding
-
-     var films = mutableListOf<MainItem>()
-
-
-
-
-    lateinit var filmItemAdapter: FilmItemAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentListBinding.inflate(layoutInflater,  container, false)
-
-        return binding.root
+        viewModel.postFire()
+        }
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initRecycler()
-        initClickListener()
     }
-
-
-private fun initClickListener() {
-
-}
-
-private fun initRecycler() {
-    Log.d("Mylog", "Yes Data1")
-
-   //val filmlist = MainItem as MutableList<MainItem>
-    val viewModel = ViewModelProvider(this).get(ListFragmentViewModel::class.java)
-   filmItemAdapter = FilmItemAdapter(films, newClickListener)
-   binding.recycler.adapter = filmItemAdapter
-
-    App.instance.api.getFilms().enqueue(object: Callback<RetrofiFilmItem>
-        {
-            override fun onResponse(
-                call: Call<RetrofiFilmItem>,
-                response: Response<RetrofiFilmItem>
-            ) {
-
-
-                films.clear()
-
-                if (response.isSuccessful){
-
-                    response.body()?.items?.forEach { model ->
-                        films.add(MainItem(
-
-                            model.nameRu,
-                            model.posterUrlPreview,
-                            model.posterUrl,
-                            model.isFavorite
-                        ))
-
-                    }
-                }
-                filmItemAdapter!!.notifyDataSetChanged()
-
-            }
-
-            override fun onFailure(call: Call<RetrofiFilmItem>, t: Throwable) {
-
-                t.printStackTrace()
-
-            }
-
-
-        })
-
-    filmItemAdapter!!.notifyDataSetChanged()
-
-}
-
-private val newClickListener = object : FilmItemAdapter.NewClickListener {
-   override fun onDetailsClick(item: MainItem, position: Int) {
-
-       parentFragmentManager.beginTransaction()
-           .replace(R.id.frame_main, DetailsFragment.newInstance(item))
-           .addToBackStack(null)
-           .commit()
-   }
-
-   override fun onFavoriteClick(item: MainItem, position: Int) {
-       films[position].isFavorite = !films[position].isFavorite
-       binding.recycler.adapter?.notifyItemChanged(position)
-
-
-
-       view?.let {
-           Snackbar.make(it,
-               if (films[position].isFavorite) "Фильм ${films[position].name} добавлен в избранное"
-               else "Фильм ${films[position].name} удален из избранного", Snackbar.LENGTH_LONG)
-               .setAction("Отмена") {
-                   films[position].isFavorite = !films[position].isFavorite
-                   binding.recycler.adapter?.notifyItemChanged(position)
-                                  }
-               .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
-               .show()
-       }
-
-   }
-}
-
-  //  companion object{
-     //   fun clickMovie(filmItem: FilmItem){
-     //       val bundle = Bundle()
-      //      bundle.putSerializable("film", filmItem)
-
-       // }
-   // }
-
-
-}*/
 
 

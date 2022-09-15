@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.films_otus.database.AppDataBase.getInstance
+import com.example.films_otus.domain.DevByteFilm
+import com.example.films_otus.domain.PostFire
+import com.example.films_otus.domain.PostItem
+import com.example.films_otus.network.App
 import com.example.films_otus.repository.FilmRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -17,7 +21,6 @@ class ListFragmentViewModel(application: Application): AndroidViewModel(applicat
     val eventNetworkError: LiveData<Boolean>
         get() = _eventNetworkError
 
-
     private var _isNetworkErrorShown = MutableLiveData<Boolean>(false)
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
@@ -30,19 +33,40 @@ class ListFragmentViewModel(application: Application): AndroidViewModel(applicat
     private fun refreshDataFromRepository() {
         viewModelScope.launch {
             try {
-                Log.d ("Mylog", "OK1")
                 filmRepository.refreshVideos()
-                Log.d ("Mylog", "OK2")
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 
-
             } catch (networkError: IOException) {
+                networkError.printStackTrace()
                 if(films.value.isNullOrEmpty())
                     _eventNetworkError.value = true
-                Log.d ("Mylog", "catch ${_eventNetworkError.value}" )
             }
         }
+    }
+
+    fun postFire(){
+        viewModelScope.launch {
+
+            App.instance.apiFire.postNot(
+                PostItem(to = "edNpbXZjQsey68iII6Juxd:APA91bFovCKTAkdW38cis5uv2l4JeK8dQMI2CLzcXFGZrddwgLFvSW4QGMmzz88JhRPpWAnpHs-_HIEruV8rHTvhS_YQ9wyL5zZlLBaFC_HkRyCkobngMRMB5jgZVVpslY2jG2rIwHNo",
+                PostFire(
+                    body = "Купи лучшую водку у меня, не пожалееешь, бла-бла-бла",
+                    title= "Привет, Алкаш"
+
+            )
+            ))
+
+
+        }
+
+    }
+
+      fun updateFilm(item: DevByteFilm, position: Int){
+          viewModelScope.launch {
+
+              filmRepository.updateFilm(item)
+          }
     }
 
     fun onNetworkErrorShown() {
@@ -58,7 +82,5 @@ class ListFragmentViewModel(application: Application): AndroidViewModel(applicat
             throw IllegalArgumentException("Unable to construct viewmodel")
         }
     }
-
-
 
 }
